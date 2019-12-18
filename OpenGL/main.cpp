@@ -18,8 +18,8 @@ int main(int args, char** argv)
 	InitSystems();
 
 	SDL_Window* m_window = 0;
-	int screenWidth = 1920;
-	int screenHeight = 1080;
+	int screenWidth = 1280;
+	int screenHeight = 720;
 
 	m_window = SDL_CreateWindow("Game Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, SDL_WINDOW_OPENGL);
 
@@ -87,7 +87,13 @@ void Render(SDL_Window* win)
 	glEnableClientState(GL_COLOR_ARRAY);
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.0f, 1.0f, 0.0f);
-	glVertex2f(0.0f, 0.5f);
+	glVertex2f(-0.25f, 0.5f);
+	glVertex2f(-0.25f, -0.25f);
+	glVertex2f(0.25f, 0.5f);
+
+	//inefficient (could resue existing vertices)
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glVertex2f(0.25f, 0.5f);
 	glVertex2f(-0.25f, -0.25f);
 	glVertex2f(0.25f, -0.25f);
 
