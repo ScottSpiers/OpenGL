@@ -13,6 +13,7 @@ ExportedObj/
 *.vcxproj
 *.vcxproj.*
 .vs/
+.vscode
 
 #=============#
 # Other Files #
@@ -23,3 +24,6 @@ OpenGL/Debug/
 OpenGL/Release/
 Debug/
 Release/
+
+build/
+CMakeFiles/
