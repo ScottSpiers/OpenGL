@@ -6,13 +6,14 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Shader.h"
+
 void InitSystems();
 void ProcessInput(GLFWwindow*);
 void Wireframe(bool);
 void Render();
 void framebuffer_size_callback(GLFWwindow*, int, int);
 void InitShaders();
-unsigned int InitShader(GLenum, const char*);
 void Dispose();
 
 bool shouldExit = false;
@@ -20,29 +21,6 @@ bool shouldExit = false;
 unsigned int VAO;
 
 unsigned int VBO;
-unsigned int vertexShader;
-
-//How do I have these separate?
-const char *vertexShaderSource = "#version 450 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-	"out vec4 vertexColour;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos, 1.0);\n"
-	"	vertexColour = vec4(gl_Position.xyz, 1.0);\n"
-    "}\0";
-
-unsigned int fragmentShader;
-const char *fragmentShaderSource = "#version 450 core\n"
-    "out vec4 FragColor;\n"
-	"in vec4 vertexColour;\n"
-	"uniform float time;\n"
-    "void main()\n"
-    "{\n"
-    "   FragColor = vertexColour * (sin(time));\n"
-    "}\n\0";
-
-unsigned int shaderProgram;
 
 float triVertices[] = {	-.5f, -.5f, 0.0f,
 					 	0.5f, -.5f, 0.0f, 
@@ -60,6 +38,8 @@ unsigned int indices[] = {0, 1, 3,
 						};
 
 unsigned int EBO;
+
+Shader* shader;
 
 int main(int args, char** argv)
 {
@@ -130,15 +110,15 @@ void Wireframe(bool useWireframe)
 	glPolygonMode(GL_FRONT_AND_BACK, mode);
 }
 
+//called only on entities with render components - these will have materials pointing to shaders
+//material.shader.ID is the program we use?
 void Render()
 {
 	glClearColor(0.2f, 0.3f ,0.3f ,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	
-
-	int timeLocation = glGetUniformLocation(shaderProgram, "time");
 	float timeValue = glfwGetTime();
-	glUniform1f(timeLocation, timeValue); //will need to use specific shaderProgram first as it sets on cur active
+	shader->setFloat("time", timeValue); //will need to use specific shaderProgram first as it sets on cur active
 	//if we have multple programs / VAOs we should bind here before drawing the objects that use them
 	//if we only need one can we just set them up once and use them for everything without having to repeat calls
 	//glUseProgram(shaderProgram);
@@ -155,31 +135,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void InitShaders()
 {
-	vertexShader = InitShader(GL_VERTEX_SHADER, vertexShaderSource);
-	fragmentShader = InitShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
-
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	//refactor out of here: can have an init shaders but even then this error checking is cumbersome
-	int success;
-	char infoLog[512];
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if(!success)
-	{
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "Error: Shader: Program: Linking Failed:\n" << infoLog << std::endl;
-	}
-
-	//This suggests we could read from file compile then delete without needing anything here
-	//Just a utils call
-	//What files do we compile? Do we grab all or do we have folders?
-	//glUseProgram(shaderProgram); //need to e called every frame or only if changing program?
-	glDeleteShader(vertexShader); //we only need shaders to link to program after this is done we no longer need them
-	glDeleteShader(fragmentShader);
-
+	shader = new Shader("C:/Users/Scott/Documents/Random/Learning/OpenGL/OpenGL/OpenGL/vertex.vs", "C:/Users/Scott/Documents/Random/Learning/OpenGL/OpenGL/OpenGL/fragment.fs");
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
@@ -198,27 +154,7 @@ void InitShaders()
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glUseProgram(shaderProgram);
-}
-
-//shader utils
-unsigned int InitShader(GLenum shaderType, const char* shaderSource)
-{
-	unsigned int shader = glCreateShader(shaderType);
-	glShaderSource(shader, 1, &shaderSource, NULL); //shader object, number of strigns as source code, source code, ?
-	glCompileShader(shader);
-
-	int success;
-	char infoLog[512];
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-
-	if(!success)
-	{
-		glGetShaderInfoLog(shader, 512, NULL, infoLog);
-		std::cout << "Error: Shader: Vertex: Compilation Failed:\n" << infoLog << std::endl;
-	}
-
-	return shader;
+	shader->use();
 }
 
 void Dispose()
@@ -226,5 +162,6 @@ void Dispose()
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
-	glDeleteProgram(shaderProgram);
+	shader->dispose();
+	shader = nullptr;
 }
