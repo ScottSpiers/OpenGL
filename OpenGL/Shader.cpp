@@ -103,3 +103,9 @@ void Shader::setFloat(const char* name, float value) const
 {
     glUniform1f(glGetUniformLocation(ID, name), value);
 }
+
+void Shader::setMatrix(const char* name, glm::f32* value) const
+{
+    //location, number of matrices, transpose?, matrix
+    glUniformMatrix4fv(glGetUniformLocation(ID, name), 1, GL_FALSE, value);
+}

@@ -8,6 +8,10 @@
 #include <sstream>
 #include <iostream>
 
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
+
 class Shader
 {
     public:
@@ -24,6 +28,7 @@ class Shader
         void setBool(const char* name, bool value) const;
         void setInt(const char* name, int value) const;
         void setFloat(const char* name, float value) const;
+        void setMatrix(const char* name, glm::f32* matrix) const;
 
     private:
         unsigned int initialise(GLenum shaderType, const char* shaderSource);
