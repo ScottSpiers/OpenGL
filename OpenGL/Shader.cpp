@@ -31,7 +31,7 @@ Shader::Shader(const char* vPath, const char* fPath)
     }
     catch(std::ifstream::failure e)
     {
-        std::cout << "Error::Shader::FILE_COULD_NOT_BE_READ"<< std::endl;
+        std::cout << "Error::Shader::FILE_COULD_NOT_BE_READ: "<< vPath << "or " << fPath << std::endl;
     }
 
     const char* vShaderCode = vCode.c_str();
@@ -78,7 +78,7 @@ unsigned int Shader::initialise(GLenum shaderType, const char* shaderSource)
 	return shader;
 }
 
-void Shader::use()
+const void Shader::use() const
 {
     glUseProgram(ID);
 }
@@ -102,6 +102,11 @@ void Shader::setInt(const char* name, int value) const
 void Shader::setFloat(const char* name, float value) const
 {
     glUniform1f(glGetUniformLocation(ID, name), value);
+}
+
+void Shader::setVec3(const char* name, float x, float y, float z) const
+{
+    glUniform3f(glGetUniformLocation(ID, name), x, y, z);
 }
 
 void Shader::setMatrix(const char* name, glm::f32* value) const

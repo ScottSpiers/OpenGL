@@ -22,12 +22,13 @@ class Shader
         //do I want a Shader class? Prefer to have a shader manager and tell it what shader to use?
         //how would I store the shader? In materials attached to render components on entities?
         //Want needed shaders loaded before shaders are actually used
-        void use();
+        const void use() const;
         void dispose();
 
         void setBool(const char* name, bool value) const;
         void setInt(const char* name, int value) const;
         void setFloat(const char* name, float value) const;
+        void setVec3(const char* name, float x, float y, float z) const;
         void setMatrix(const char* name, glm::f32* matrix) const;
 
     private:
