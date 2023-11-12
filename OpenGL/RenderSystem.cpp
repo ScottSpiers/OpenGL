@@ -63,7 +63,7 @@ void RenderSystem::render(Camera* camera)
 			//have static objects which don't have their transforms change - EVER!
 
 			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(2.5f * meshCount));
+			model = glm::translate(model, glm::vec3(2.5f * meshCount, -1.25f * meshCount, 2.5f * meshCount));
 			++meshCount;
 			//model = glm::rotate(model, (float) timeValue * glm::radians(50.0f), glm::vec3(0.5, 1.0f, 0.0f));
 
@@ -71,9 +71,14 @@ void RenderSystem::render(Camera* camera)
 
 			glm::mat4 view = camera->getView();
 			
-			shader->setMatrix("model", glm::value_ptr(model));
-			shader->setMatrix("view", glm::value_ptr(view));
-			shader->setMatrix("projection", glm::value_ptr(proj));
+			glm::mat3 normalMat = glm::mat3(transpose(inverse(model)));
+			shader->setMatrix3("normalMat", glm::value_ptr(normalMat));
+			shader->setMatrix4("model", glm::value_ptr(model));
+			shader->setMatrix4("view", glm::value_ptr(view));
+			shader->setMatrix4("projection", glm::value_ptr(proj));
+
+			auto camPos = camera->getPosition();
+			shader->setVec3("viewPos", camPos.x, camPos.y, camPos.z);
 		}
 
 		meshes[i]->bind();

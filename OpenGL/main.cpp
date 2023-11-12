@@ -191,15 +191,24 @@ void addEntities()
 	Material* defaultMat = new Material(shader, texture);
 
 	shader->use();
-	shader->setVec3("objColour",1.0f, 0.5f, .33f);
-	shader->setVec3("lightColour", 1.0f, 1.0f, 1.0f);
+	shader->setVec3("mat.ambient", 1.0f, 0.5f, .31f);
+	shader->setVec3("mat.diffuse", 1.0f, 0.5f, .31f);
+	shader->setVec3("mat.specular", 0.5f, 0.5f, 0.5f);
+	shader->setFloat("mat.shininess", 32.0f);
+	
+	shader->setVec3("light.position", 0, 0, 0);
+	shader->setVec3("light.ambient", .2f, .2f, .2f);
+	shader->setVec3("light.diffuse", .5f, .5f, .5f);
+	shader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
 	Shader* lightShader = new Shader((shaderPath + "light.vs").c_str(), (shaderPath + "light.fs").c_str());
 	Material* lightMaterial = new Material(lightShader, nullptr);
 
+	lightShader->use();
+
+	m_entityContainer->addEntity(light, lightMaterial);
 	m_entityContainer->addEntity(cubeMesh1, defaultMat);
 	m_entityContainer->addEntity(cubeMesh2, defaultMat);
-	m_entityContainer->addEntity(light, lightMaterial);
 }
 
 void InitCamera()

@@ -56,7 +56,7 @@ class Mesh
 
     private:
     unsigned int m_vao;
-    unsigned int m_vbo;
+    unsigned int m_vbo; //new vbo for every mesh inefficient?
 
     unsigned int m_ebo;
 

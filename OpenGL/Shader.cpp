@@ -109,7 +109,12 @@ void Shader::setVec3(const char* name, float x, float y, float z) const
     glUniform3f(glGetUniformLocation(ID, name), x, y, z);
 }
 
-void Shader::setMatrix(const char* name, glm::f32* value) const
+void Shader::setMatrix3(const char* name, glm::f32* value) const
+{
+    glUniformMatrix3fv(glGetUniformLocation(ID, name), 1, GL_FALSE, value);
+}
+
+void Shader::setMatrix4(const char* name, glm::f32* value) const
 {
     //location, number of matrices, transpose?, matrix
     glUniformMatrix4fv(glGetUniformLocation(ID, name), 1, GL_FALSE, value);
