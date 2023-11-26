@@ -46,14 +46,19 @@ void RenderSystem::render(Camera* camera)
 	const std::vector<Material*>& mats = m_entityContainer->getMaterials();
 	for(int i = 0; i < meshes.size(); ++i)
 	{
-		const Texture* texture = mats[i]->GetTexture();
-		const Shader* shader = mats[i]->GetShader();
+		auto mat = mats[i];
+		
+		const Texture* diffMap = mat->GetDiffuseMap();
+		const Texture* specMap = mat->GetSpecularMap();
+		const Shader* shader = mat->GetShader();
 
-		if(texture != nullptr)
-			texture->bind();
-		else
-			glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		
+		if(diffMap != nullptr)
+			diffMap->bind();
 
+		if(specMap != nullptr)
+			specMap->bind(1);
 
 		if(shader != nullptr)
 		{
@@ -79,6 +84,18 @@ void RenderSystem::render(Camera* camera)
 
 			auto camPos = camera->getPosition();
 			shader->setVec3("viewPos", camPos.x, camPos.y, camPos.z);
+
+			shader->setVec3("mat.ambient", mat->GetAmbient());
+			// shader->setVec3("mat.diffuse", mat->GetDiffuse());
+			// shader->setVec3("mat.specular", mat->GetSpecular());
+			shader->setInt("mat.diffuse", 0);
+			shader->setInt("mat.specular", 1);
+			shader->setFloat("mat.shininess", mat->GetShininess());
+			
+			shader->setVec3("light.position", 0, 0, 0);
+			shader->setVec3("light.ambient", .2f, .2f, .2f);
+			shader->setVec3("light.diffuse", .5f, .5f, .5f);
+			shader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 		}
 
 		meshes[i]->bind();

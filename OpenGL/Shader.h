@@ -29,6 +29,7 @@ class Shader
         void setInt(const char* name, int value) const;
         void setFloat(const char* name, float value) const;
         void setVec3(const char* name, float x, float y, float z) const;
+        void setVec3(const char* name, glm::vec3 value) const;
         void setMatrix3(const char* name, glm::f32* matirx) const;
         void setMatrix4(const char* name, glm::f32* matrix) const;
 

@@ -187,24 +187,12 @@ void addEntities()
 	light->initBuffers();
 
 	Shader* shader = new Shader( (shaderPath + "vertex.vs").c_str(), (shaderPath + "fragment.fs").c_str());
-	Texture* texture = new Texture("C:/Users/Scott/Documents/Random/Learning/OpenGL/OpenGL/OpenGL/data/container.jpg");
-	Material* defaultMat = new Material(shader, texture);
-
-	shader->use();
-	shader->setVec3("mat.ambient", 1.0f, 0.5f, .31f);
-	shader->setVec3("mat.diffuse", 1.0f, 0.5f, .31f);
-	shader->setVec3("mat.specular", 0.5f, 0.5f, 0.5f);
-	shader->setFloat("mat.shininess", 32.0f);
-	
-	shader->setVec3("light.position", 0, 0, 0);
-	shader->setVec3("light.ambient", .2f, .2f, .2f);
-	shader->setVec3("light.diffuse", .5f, .5f, .5f);
-	shader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+	Texture* diffMap = new Texture("C:/Users/Scott/Documents/Random/Learning/OpenGL/OpenGL/OpenGL/data/diffMap.png");
+	Texture* specMap = new Texture("C:/Users/Scott/Documents/Random/Learning/OpenGL/OpenGL/OpenGL/data/specMap.png");
+	Material* defaultMat = new Material(shader, diffMap, specMap);
 
 	Shader* lightShader = new Shader((shaderPath + "light.vs").c_str(), (shaderPath + "light.fs").c_str());
-	Material* lightMaterial = new Material(lightShader, nullptr);
-
-	lightShader->use();
+	Material* lightMaterial = new Material(lightShader, nullptr, nullptr);
 
 	m_entityContainer->addEntity(light, lightMaterial);
 	m_entityContainer->addEntity(cubeMesh1, defaultMat);

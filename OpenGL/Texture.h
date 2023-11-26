@@ -41,12 +41,27 @@ class Texture
                 return;
             }
 
+            auto format = GetTextureFormat(m_nrChannels);
+
             // Texture target - mipmap level - texture format - width - height - legacy 0 - src format - src datatype - img data
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, m_data);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, m_data);
             glGenerateMipmap(GL_TEXTURE_2D);
 
             stbi_image_free(m_data);
         }
+
+        static GLenum GetTextureFormat(int channels)
+        {
+            if(channels == 1)
+               return GL_RED;
+            else if(channels == 3)
+                return GL_RGB;
+            else if(channels == 4)
+                return GL_RGBA;
+            else
+                return GL_RGBA8;
+        }
+
 
         ~Texture()
         {
