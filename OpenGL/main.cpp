@@ -1,4 +1,4 @@
-
+#define GLM_ENABLE_EXPERIMENTAL
 #include <iostream>
 #include <string>
 #include <vector>
@@ -6,9 +6,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "stb_image.cpp"
 
@@ -17,6 +17,7 @@
 #include "Mesh.h"
 #include "RenderSystem.h"
 #include "Shader.h"
+
 
 void InitSystems();
 void ProcessInput(GLFWwindow*, float);
@@ -34,7 +35,7 @@ Camera* m_camera;
 EntityContainer* m_entityContainer;
 RenderSystem* m_renderSystem;
 
-const std::string shaderPath = "C:/Users/Scott/Documents/Random/Learning/OpenGL/OpenGL/OpenGL/shaders/";
+const std::string shaderPath = "C:/Users/Scott/Documents/Repos/Learning/OpenGL/OpenGL/shaders/";
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -187,8 +188,8 @@ void addEntities()
 	light->initBuffers();
 
 	Shader* shader = new Shader( (shaderPath + "vertex.vs").c_str(), (shaderPath + "fragment.fs").c_str());
-	Texture* diffMap = new Texture("C:/Users/Scott/Documents/Random/Learning/OpenGL/OpenGL/OpenGL/data/diffMap.png");
-	Texture* specMap = new Texture("C:/Users/Scott/Documents/Random/Learning/OpenGL/OpenGL/OpenGL/data/specMap.png");
+	Texture* diffMap = new Texture("C:/Users/Scott/Documents/Repos/Learning/OpenGL/OpenGL/data/diffMap.png");
+	Texture* specMap = new Texture("C:/Users/Scott/Documents/Repos/Learning/OpenGL/OpenGL/data/specMap.png");
 	Material* defaultMat = new Material(shader, diffMap, specMap);
 
 	Shader* lightShader = new Shader((shaderPath + "light.vs").c_str(), (shaderPath + "light.fs").c_str());

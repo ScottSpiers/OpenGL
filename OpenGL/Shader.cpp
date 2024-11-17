@@ -31,7 +31,7 @@ Shader::Shader(const char* vPath, const char* fPath)
     }
     catch(std::ifstream::failure e)
     {
-        std::cout << "Error::Shader::FILE_COULD_NOT_BE_READ: "<< vPath << "or " << fPath << std::endl;
+        std::cout << "Error::Shader::FILE_COULD_NOT_BE_READ: "<< vPath << " or " << fPath << std::endl;
     }
 
     const char* vShaderCode = vCode.c_str();
